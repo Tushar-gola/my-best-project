@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+    <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        iframe {
+            width: 100%;
+            height: 500px;
+            background-color: rgba(192, 192, 192, 0.5);
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <div class="container-fluid">
+            <div class="left-area d-flex justify-content-center align-items-center">
+                <button class="toggle">
+                    <div class="line"></div>
+                    <div class="line"></div>
+                    <div class="line"></div>
+                </button>
+                <img src="https://www.freeiconspng.com/thumbs/youtube-logo-png/hd-youtube-logo-png-transparent-background-20.png"
+                    style="width: 100%; height: 50px; margin-left: 20px;" alt="">
+                <h4 class="fw-bold ms-1">MyTube</h4>
+            </div>
+            <div class="search_area d-flex">
+                <!-- <form action=""> -->
+                <div class="form">
+                    <i class="fa fa-search"></i>
+                    <input type="text" class="form-control form-input" id="speech" placeholder="Search anything...">
+                    <span class="left-pan"><i class="fa fa-microphone"></i></span>
+
+                </div>
+            </div>
+            <div class="right-content d-flex align-items-center">
+
+                <!-- Button trigger modal -->
+                <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    <i class="fa-solid fa-magnifying-glass d-lg-none d-md-none d-sm-block"></i>
+                </button>
+
+                <a href="">
+                    <svg viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" focusable="false"
+                        class="style-scope yt-icon"
+                        style="pointer-events: none; display: block; width:30px; height: 30px;">
+                        <g class="style-scope yt-icon">
+                            <path
+                                d="M14,13h-3v3H9v-3H6v-2h3V8h2v3h3V13z M17,6H3v12h14v-6.39l4,1.83V8.56l-4,1.83V6 M18,5v3.83L22,7v8l-4-1.83V19H2V5H18L18,5 z"
+                                class="style-scope yt-icon">
+                            </path>
+                        </g>
+                    </svg>
+                </a>
+                <a href=""><i class="fa-solid fa-bell"></i></a>
+                <a href="" style="width: 40px; height: 40px;border-radius: 50%; "><img
+                        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPuz5JBE9b0gwhz6uwrvAt78FGTTl56Krjkg&usqp=CAU"
+                        alt="" style="width: 40px; height: 40px; border-radius: 50%;">
+                </a>
+            </div>
+        </div>
+    </nav>
+    <section>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-8">
+                    <iframe src="" frameborder="0"></iframe>
+                </div>
+                <div class="col-lg-4">
+                    <div class="row main_con"></div>
+                </div>
+            </div>
+    </section>
+
+
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script>
+        $(document).ready(function () {
+
+            let key = "AIzaSyAXWjy_rYU_xvHcUlEfU3wotCLWU23B6GE";
+            let arr;
+            let index = 0
+            let html
+
+
+
+
+            fetch(`https://www.googleapis.com/youtube/v3/search?q="new songs"&part=snippet&maxResults=50&type=video&key=${key}`)
+                .then((responce) => {
+                    return responce.json();
+                })
+                .then((data) => {
+                    arr = data.items
+                    console.log(arr)
+                    get_data()
+
+                })
+
+
+            get_data = () => {
+                arr.map(set_data)
+            }
+
+            set_data = () => {
+                html = ` <div class="col-12 main_box" onclick=box_click(${index})>
+                    <div class="box d-flex mb-2">
+                        <div class="img">
+                            <img src="${arr[ index ].snippet.thumbnails.high.url}"
+                                alt="" class="rounded-3 me-3" style="width:189px;height:127px">
+                        </div>
+                        <div class="text">
+                            <p style="font-sixe:14px !important">${arr[ index ].snippet.title}</p>
+                        </div>
+                    </div>
+
+                </div>`
+
+                $('.main_con').after(html);
+
+                index++
+
+
+            }
+
+            // box_click = (box_index) => {
+            //     let vid = arr[ box_index ].id.videoId;
+            //     console.log(vid)
+            //     $('iframe').attr("src", "https://www.youtube.com/embed/" + vid)
+            // }
+
+
+
+            $('.fa-microphone').click(function () {
+                let recognition = new webkitSpeechRecognition();
+                recognition.lang = "en-GB";
+                recognition.onresult = function (event) {
+                    document.getElementById("speech").value = event.results[ 0 ][ 0 ].transcript;
+                }
+                recognition.start();
+            })
+
+            $('.owl-carousel').owlCarousel({
+                autoWidth: false,
+                // margin: 5,
+                nav: true,
+                responsive: {
+                    0: {
+                        items: 5
+                    },
+                    600: {
+                        items: 8
+                    },
+                    1000: {
+                        items: 11
+                    }
+                }
+            });
+
+        });
+    </script>
+
+
+</body>
+
+</html>
